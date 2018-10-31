@@ -7,8 +7,6 @@ import java.lang.annotation.Target;
 import java.util.Hashtable;
 import java.util.Map;
 
-import javax.xml.bind.annotation.XmlSeeAlso;
-
 @Target ({ElementType.FIELD, ElementType.TYPE, ElementType.TYPE_PARAMETER})
 @Retention (RetentionPolicy.RUNTIME)
 @interface Alphabet{
