@@ -19,6 +19,7 @@ class AllZoneIDAvaible {
 		for(String ids : ts){
 			System.out.println(ids);
 		}
+		System.out.println("");
 		zoneIdSavingFile();
 	}
 	
@@ -28,7 +29,7 @@ class AllZoneIDAvaible {
 			PrintStream ps = new PrintStream(fos);
 			String[] zoneId = TimeZone.getAvailableIDs(); 
 			for(String i : zoneId){
-				ps.println(i);
+				ps.println("* " + i);
 			}
 		} 
 		catch (FileNotFoundException e){
