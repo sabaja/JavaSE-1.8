@@ -12,6 +12,8 @@ import java.util.function.BiFunction;
 
 public class CheckingCascadingIf {
 
+	private static int c = 0;
+
 	private static interface FiveFunction<K, K2, L, E, R> {
 		public abstract R apply(K k, K2 k2, L l, E e);
 	}
@@ -32,49 +34,7 @@ public class CheckingCascadingIf {
 		faseActionMap.put("PEA", listOut);
 		faseActionMap.put("PCA", listOut);
 
-		List<String> resFases = new ArrayList<>();
-		FiveFunction<String, String, List<String>, String, Optional<List<String>>> ff = (k, k2, l, e) -> {
-			if (contains(k, k2, l, e)) {
-				resFases.add(k);
-			}
-			return Optional.of(resFases);
-		};
-
-		for (Entry<String, List<String>> fases : faseActionMap.entrySet()) {
-			System.out.println(fases.getKey() + " " + fases.getValue());
-		}
-
-		int[] i = { 0 };
-		Object[] opsArr = new Object[1];
-
-		faseActionMap.forEach((k, v) -> {
-			int c = 0;
-			switch (k) {
-			case "PAO":
-				i[0] = c++;
-				System.out.println( k + " " + i[0]);
-			case "PAI":
-				i[0] = c++;
-				System.out.println( k + " " + i[0]);
-			case "PAR":
-				i[0] = c++;
-				System.out.println( k + " " + i[0]);
-			case "PAC":
-				i[0] = c++;
-				System.out.println( k + " " + i[0]);
-				// if(contains("PAI", k2, l, "REBI")) {
-				System.out.println();
-				opsArr[0] = ff.apply("PAI", k, v, "REBI");
-				break;
-			}
-
-		});
-		if (Objects.isNull(opsArr)) {
-			Optional<List<String>> op = (Optional<List<String>>) opsArr[0];
-			op.get().forEach(e -> System.out.println());
-		}else {
-			System.out.println("ummm");
-		}
+		process(faseActionMap);
 
 	}
 
@@ -86,4 +46,53 @@ public class CheckingCascadingIf {
 		return actions.stream().anyMatch(ele -> action.equals(ele));
 	}
 
+	public static Optional<List<String>> process(Map<String, List<String>> faseActionMap) {
+		printFase(faseActionMap);
+		Optional<List<String>> opt;
+		List<String> resFases = new ArrayList<>();
+		FiveFunction<String, String, List<String>, String, List<String>> ff = (k, k2, l, e) -> {
+			if (contains(k, k2, l, e)) {
+				resFases.add(k);
+				System.out.println("trovato n°: " + c + " key: " + k + " resFases: " + resFases);
+			}
+			return resFases;
+		};
+
+		int[] i = { 0 };
+
+		faseActionMap.forEach((k, v) -> {
+
+			switch (k) {
+			case "PAO":
+				i[0] = c++;
+				System.out.println(k + " " + i[0]);
+			case "PAI":
+				i[0] = c++;
+				System.out.println(k + " " + i[0]);
+			case "PAR":
+				i[0] = c++;
+				System.out.println(k + " " + i[0]);
+			case "PAC":
+				i[0] = c++;
+
+				// if(contains("PAI", k2, l, "REBI")) {
+				ff.apply("PAI", k, v, "REBI");
+				System.out.println(k + ": " + v + " - " + i[0]);
+				break;
+			}
+
+		});
+		if (!Objects.isNull(resFases)) {
+			resFases.forEach(e -> System.out.println("Result: " + e));
+		} else {
+			System.out.println(resFases + " NULL");
+		}
+		return null;
+	}
+
+	private static void printFase(Map<String, List<String>> faseActionMap) {
+		for (Entry<String, List<String>> fases : faseActionMap.entrySet()) {
+			System.out.println(fases.getKey() + " " + fases.getValue());
+		}
+	}
 }

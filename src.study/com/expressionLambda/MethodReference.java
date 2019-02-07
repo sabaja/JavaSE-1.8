@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -20,7 +21,7 @@ public class MethodReference {
 		List<String> list = new ArrayList<>(Arrays.asList("1", "2", "3"));
 		methodReferenceList(list, new String("4"));
 		System.out.println();
-		checkAndAddElement(list,"5");
+		checkAndAddElement(list, "5");
 
 	}
 
@@ -43,7 +44,6 @@ public class MethodReference {
 	}
 
 	public static void checkAndAddElement(List<String> list, String ele) {
-		IntStream.range(0, list.size()).filter(i -> ele.equalsIgnoreCase(list.get(i))).findAny();
 		final Integer minusOne = Integer.valueOf(ele) - 1;
 		Optional<String> minusOneOptional = list.stream().filter(e -> e.equalsIgnoreCase(String.valueOf(minusOne)))
 				.findAny();
@@ -51,4 +51,5 @@ public class MethodReference {
 			methodReferenceList(list, ele);
 		}
 	}
+	
 }
