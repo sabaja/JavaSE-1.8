@@ -5,10 +5,12 @@ import java.time.Month;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAccessor;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 import io.reactivex.functions.Consumer;
 
@@ -29,6 +31,14 @@ public class FamilyBirthday {
 		super();
 		this.born = born;
 		this.familyElement = familyElement;
+	}
+
+	public static List<String> getFamilyList() {
+		String[] familyArr = new String[Family.values().length];
+		for (Family ele : Family.values()) {
+			familyArr[ele.ordinal()] = ele.toString();
+		}
+		return Arrays.asList(familyArr);
 	}
 
 	public boolean isBirthdayDay(Family familyElement, TemporalAccessor date) {
@@ -66,7 +76,6 @@ public class FamilyBirthday {
 		return born;
 	}
 
-
 	public Family getFamilyElement() {
 		return familyElement;
 	}
@@ -99,10 +108,16 @@ public class FamilyBirthday {
 		FamilyBirthday jacopo = new FamilyBirthday(Family.JACOPO, LocalDate.of(1976, Month.SEPTEMBER.getValue(), 17));
 		List<FamilyBirthday> listBirthday = Arrays.asList(andrea, gaia, elena, jacopo);
 		Collections.sort(listBirthday, new FamilyAgeComparator());
-		listBirthday.forEach( f -> System.out.printf("%d giorni passati dalla nascita di %s %n", f.daysFromBorn(), f.familyElement));
+		listBirthday.forEach(
+				f -> System.out.printf("%d giorni passati dalla nascita di %s %n", f.daysFromBorn(), f.familyElement));
 //		for (FamilyBirthday f : listBirthday) {
 //			System.out.printf("%d giorni passati dalla nascita di %s %n", f.daysFromBorn(), f.familyElement);
 //		}
+		
+		List<String> family = getFamilyList();
+		Random rand = new Random();
+		int index = rand.nextInt(family.size());
+		System.out.println("Sorpresa! Ecco a voi: "  + family.get(index));
 	}
 
 }

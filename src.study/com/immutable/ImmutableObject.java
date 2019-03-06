@@ -1,4 +1,4 @@
-package com.multithreading;
+package com.immutable;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
