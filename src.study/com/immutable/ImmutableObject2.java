@@ -23,7 +23,7 @@ public class ImmutableObject2 {
 		couples.put("2", "Ele2");
 		couples.put("3", "Ele3");
 
-		ImmutableExe imm = new ImmutableExe.ImmutableExeBuilder()
+		ImmutableElement imm = new ImmutableElement.ImmutableExeBuilder()
 				.setElements(elements)
 				.setCouples(couples)
 				.setIndex(index).build();
@@ -39,13 +39,13 @@ public class ImmutableObject2 {
  * @author SabatiniJa
  *
  */
-final class ImmutableExe {
+final class ImmutableElement {
 
 	private final int index;
 	private final List<String> elements;
 	private final Map<String, String> couples;
 
-	private ImmutableExe(ImmutableExeBuilder builder) {
+	private ImmutableElement(ImmutableExeBuilder builder) {
 		super();
 		this.index = builder.index;
 		this.elements = builder.elements;
@@ -94,13 +94,13 @@ final class ImmutableExe {
 			return this;
 		}
 
-		public ImmutableExe build() {
-			return new ImmutableExe(this);
+		public ImmutableElement build() {
+			return new ImmutableElement(this);
 		}
 	}
 
 	@Override
 	public String toString() {
-		return "ImmutableExe [index=" + index + ", elements=" + elements + ", couples=" + couples + "]";
+		return "ImmutableElement [index=" + index + ", elements=" + elements + ", couples=" + couples + "]";
 	}
 }
