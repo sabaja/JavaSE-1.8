@@ -21,8 +21,8 @@ import java.nio.file.Paths;
 public class PathMatcherAndGlobExpressions {
 
 	public static void main(String[] args) {
-		Path path = Paths.get("C:\\MY_JAVA_SOURCES\\Test.java"); 
-		Path path_2 = Paths.get("Test.class"); 
+		Path path = Paths.get("C:\\MY_JAVA_SOURCES\\TestScientist.java"); 
+		Path path_2 = Paths.get("TestScientist.class"); 
 		FileSystem fs = FileSystems.getDefault(); 
 		PathMatcher matcher = fs.getPathMatcher("glob:*.java"); 
 		matcher.matches(path); // false 

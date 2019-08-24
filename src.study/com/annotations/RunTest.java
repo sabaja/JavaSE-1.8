@@ -41,10 +41,10 @@ class RunTest {
 
 		}
 
-		// Process @Test
+		// Process @TestScientist
 		for (Method method : obj.getDeclaredMethods()) {
 
-			// if method is annotated with @Test
+			// if method is annotated with @TestScientist
 			if (method.isAnnotationPresent(Test.class)) {
 
 				Annotation annotation = method.getAnnotation(Test.class);
@@ -55,15 +55,15 @@ class RunTest {
 
 				  try {
 					method.invoke(obj.newInstance());
-					System.out.printf("%s - Test '%s' - passed %n", ++count, method.getName());
+					System.out.printf("%s - TestScientist '%s' - passed %n", ++count, method.getName());
 					passed++;
 				  } catch (Throwable ex) {
-					System.out.printf("%s - Test '%s' - failed: %s %n", ++count, method.getName(), ex.getCause());
+					System.out.printf("%s - TestScientist '%s' - failed: %s %n", ++count, method.getName(), ex.getCause());
 					failed++;
 				  }
 
 				} else {
-					System.out.printf("%s - Test '%s' - ignored%n", ++count, method.getName());
+					System.out.printf("%s - TestScientist '%s' - ignored%n", ++count, method.getName());
 					ignore++;
 				}
 

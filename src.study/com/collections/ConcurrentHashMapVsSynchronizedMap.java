@@ -51,15 +51,15 @@ public class ConcurrentHashMapVsSynchronizedMap {
 
 	public static void main(String[] args) throws InterruptedException {
 
-		// Test with Hashtable Object
+		// TestScientist with Hashtable Object
 		hashTableObject = new Hashtable<String, Integer>();
 		performTest(hashTableObject);
 
-		// Test with synchronizedMap Object
+		// TestScientist with synchronizedMap Object
 		synchronizedMapObject = Collections.synchronizedMap(new HashMap<String, Integer>());
 		performTest(synchronizedMapObject);
 
-		// Test with ConcurrentHashMap Object
+		// TestScientist with ConcurrentHashMap Object
 		concurrentHashMapObject = new ConcurrentHashMap<String, Integer>();
 		performTest(concurrentHashMapObject);
 
@@ -67,7 +67,7 @@ public class ConcurrentHashMapVsSynchronizedMap {
 
 	public static void performTest(final Map<String, Integer> threadObjs) throws InterruptedException {
 
-		System.out.println("Test started for: " + threadObjs.getClass());
+		System.out.println("TestScientist started for: " + threadObjs.getClass());
 		long averageTime = 0;
 		for (int i = 0; i < 5; i++) {
 

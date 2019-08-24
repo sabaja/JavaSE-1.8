@@ -125,7 +125,7 @@ class WriteRead {
 			PrintStream scrivi = new PrintStream(prova);
 
 			for (int i = 0; i < 10; i++) {
-				scrivi.print("Test-" + (iD_time) + (i) + " ");
+				scrivi.print("TestScientist-" + (iD_time) + (i) + " ");
 			}
 
 			flagIO = true;
