@@ -1,5 +1,8 @@
 package com.csv.excel;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -8,16 +11,11 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.DataFormatter;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-
 public class ExcelManager {
 
 	private static final String TC = "TC";
+	private static int TC_START_INDEX;
+	private static int TC_END_INDEX;
 	private static final String SG = "SG";
 	private static final String PATTERN_FINE_NUMBER = "00";
 	private static final String PATTERN_OGG_NUMBER = "000";
@@ -64,6 +62,8 @@ public class ExcelManager {
 		Matcher match = word.matcher(text);
 		while (match.find()) {
 			System.out.println("Found TC at index " + match.start() + " - " + (match.end()) + " - " + text.length());
+			TC_START_INDEX = match.start();
+			TC_END_INDEX = match.end();
 			fineNumber = Integer.valueOf(text.substring(match.end(), match.end() + 2));
 		}
 		return String.valueOf(fineNumber);
@@ -82,9 +82,9 @@ public class ExcelManager {
 		for (int i = 0; i <= sheet.getLastRowNum(); i++) {
 			Row row = sheet.getRow(i);
 			if (Objects.nonNull(row)) {
-				Cell cell = row.getCell(COLUMN);
+				Cell fineCell = row.getCell(COLUMN);
 				String cellValue;
-				if ((cellValue = cell.getStringCellValue()).contains(SG)) {
+				if ((cellValue = fineCell.getStringCellValue()).contains(SG)) {
 					cellValue = cellValue.trim();
 					final int start = cellValue.indexOf(TC_NUM) + TC_NUM.length();
 					final int end = cellValue.length();
@@ -101,4 +101,6 @@ public class ExcelManager {
 			}
 		}
 	}
+
+
 }
