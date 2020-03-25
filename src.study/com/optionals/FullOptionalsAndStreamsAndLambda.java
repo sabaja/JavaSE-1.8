@@ -7,17 +7,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Slf4j
-public class OptionalsAndStreams {
+public class FullOptionalsAndStreamsAndLambda {
 
     //v.1 v.2 v.3 etc...
     private static final String VERSION_REGEX = "v\\d\\.";
@@ -58,8 +55,13 @@ public class OptionalsAndStreams {
             ) {
                 log.info("USBs");
                 computers.stream()
-                        .filter(OptionalsAndStreams::isUSBVersioned)
+                        .filter(FullOptionalsAndStreamsAndLambda::isUSBVersioned)
                         .forEach(usb -> log.info("{}", usb.toString()));
+                Map<String, String> soundCardsmap = computers.stream()
+                        .filter(FullOptionalsAndStreamsAndLambda::isUSBVersioned)
+                        .map(Computer::getSoundCard)
+                        .collect(Collectors.toMap(SoundCard::getVersion, soundCard -> soundCard.getUsb().getVersion()));
+                soundCardsmap.forEach((key, value) -> log.info("{} - {}", key, value));
             }
         }
     }
@@ -91,19 +93,18 @@ public class OptionalsAndStreams {
                 .filter(Objects::nonNull)
                 .map(SoundCard::getVersion)
                 .filter(StringUtils::isNotEmpty)
-                .anyMatch(OptionalsAndStreams::isVersioned);
+                .anyMatch(FullOptionalsAndStreamsAndLambda::isVersioned);
     }
 
     private static boolean isEven() {
         int nextInt = RandomUtils.nextInt(0, 10);
         boolean even = nextInt % 2 == 0;
-        System.out.printf("%d è pari? %b%n", nextInt, even);
+        log.info("{} è pari? {}}", nextInt, even);
         return even;
     }
 
     private static boolean isVersioned(String version) {
-        String patternToSeachFor = VERSION_REGEX;
-        Pattern pattern = Pattern.compile(patternToSeachFor, Pattern.CASE_INSENSITIVE);
+        Pattern pattern = Pattern.compile(VERSION_REGEX, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(version);
         return matcher.find();
     }
