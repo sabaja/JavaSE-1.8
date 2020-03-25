@@ -1,8 +1,6 @@
 package com.optionals;
 
 import com.google.common.collect.ImmutableList;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -12,6 +10,8 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static java.util.Objects.nonNull;
 
 @Slf4j
 public class FullOptionalsAndStreamsAndLambda {
@@ -37,20 +37,21 @@ public class FullOptionalsAndStreamsAndLambda {
 
     private static void streamsAndOptions() {
         List<Computer> computers = null;
-        if (isEven()) {
+        if (true) {
             computers = of();
-            String cs = computers.stream()
+            String computerStream = computers.stream()
                     .filter(Objects::nonNull)
                     .map(Optional::of).findAny()
                     .flatMap(Function.identity())
                     .map(Computer::getSoundCard)
                     .map(SoundCard::getVersion).filter(s -> StringUtils.containsIgnoreCase(s, "V")).orElse(StringUtils.EMPTY);
-            log.info(cs);
+            log.info(computerStream);
         }
         //stream da computers / map di SoundCard / filter nonNull / collect to Set
-        if (Objects.nonNull(computers)) {
-            Set<SoundCard> soundCards = retrieveSoundCards(computers);
-            printSoundCards(soundCards);
+        if (nonNull(computers)) {
+            Set<SoundCard> uniqueSoundCards = retrieveUniqueSoundCards(computers);
+            List<SoundCard> soundCards = retrieveSoundCards(computers);
+            printSoundCards(uniqueSoundCards);
             if (isSoundCardVersioned(computers)
             ) {
                 log.info("USBs");
@@ -71,12 +72,25 @@ public class FullOptionalsAndStreamsAndLambda {
         soundCards.forEach(sc -> log.info("{}", sc.toString()));
     }
 
-    private static Set<SoundCard> retrieveSoundCards(List<Computer> computers) {
+    private static Set<SoundCard> retrieveUniqueSoundCards(List<Computer> computers) {
         return computers.stream()
                 .map(Computer::getSoundCard)
                 .filter(Objects::nonNull)
                 .filter(soundCard -> StringUtils.isNoneEmpty(soundCard.getVersion()))
                 .collect(Collectors.toSet());
+    }
+
+    private static List<SoundCard> retrieveSoundCards(List<Computer> computers) {
+        return nonNull(computers) ? retrieveNonNullSoundCard(computers) : null;
+
+    }
+
+    private static List<SoundCard> retrieveNonNullSoundCard(List<Computer> computers) {
+        return computers.stream()
+                .map(Computer::getSoundCard)
+                .filter(Objects::nonNull)
+                .filter(soundCard -> StringUtils.isNoneEmpty(soundCard.getVersion()))
+                .collect(Collectors.toList());
     }
 
     private static boolean isUSBVersioned(Computer computer) {
@@ -109,36 +123,4 @@ public class FullOptionalsAndStreamsAndLambda {
         return matcher.find();
     }
 
-}
-
-@Data
-@NoArgsConstructor
-class Computer {
-    private SoundCard soundCard;
-    private String name;
-
-    public Computer(SoundCard soundCard, String name) {
-        this.soundCard = soundCard;
-        this.name = name;
-    }
-}
-
-@Data
-final class SoundCard {
-    private String version;
-    private USB usb;
-
-    public SoundCard(String version, USB usb) {
-        this.version = version;
-        this.usb = usb;
-    }
-}
-
-@Data
-final class USB {
-    private String version;
-
-    public USB(String version) {
-        this.version = version;
-    }
 }
