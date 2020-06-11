@@ -1,7 +1,8 @@
 package com.optionals;
 
-import com.google.common.collect.ImmutableList;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -10,6 +11,7 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Objects.nonNull;
 
@@ -25,19 +27,74 @@ public class FullOptionalsAndStreamsAndLambda {
         final Computer computer3 = new Computer(null, "C3");
         final Computer computer4 = new Computer(new SoundCard("v0.4.1", new USB("v4.0.1")), "C4");
         final Computer computer5 = new Computer(new SoundCard("V-a", new USB("AVANT")), "C5");
-        final Computer computer6 = new Computer();
+        final Computer computer6 = null;
         final Computer computer7 = new Computer(new SoundCard("v0.4.1", null), "C7");
         final Computer computer8 = new Computer(new SoundCard("NOT-SUPPORTED", new USB("v3.3.1")), "C8");
-        return ImmutableList.of(computer1, computer2, computer3, computer4, computer5, computer6, computer7, computer8);
+        final Computer computer9 = new Computer(new SoundCard("v1.0.1", new USB("v0.0.1")), "C2");
+        return Arrays.asList(computer1, computer2, computer3, computer4, computer5, computer6, computer7, computer8, computer9);
     }
 
     public static void main(String[] args) {
-        streamsAndOptions();
+        //streamsAndOptions();
+        distinctByProperty();
+        System.out.println();
+        distinctByProperty2();
+        //stampa(6);
+
+    }
+
+    private static void distinctByProperty() {
+        List<Computer> computers = of();
+        Set<String> distComputers = new HashSet<>(computers.size());
+        computers
+                .stream()
+                .filter(Objects::nonNull)
+                .filter(c -> distComputers.add(c.getName())).collect(Collectors.toList()).forEach(System.out::println);
+
+    }
+
+    private static void distinctByProperty2() {
+        List<Computer> computers = of();
+        computers.stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toMap(
+                        Computer::getName,
+                        obj -> obj,
+                        (first, second) -> first
+                        // pick the first if multiple values have the same key
+                )).values()
+                .stream()
+                .filter(computer -> nonNull(computer.getName()))
+                .sorted((o1, o2) -> o1.getName().compareTo(o2.getName()))
+                .forEach(System.out::println);
+
+    }
+
+    private static void stampa(final int NUM) {
+        for (int i = 0; i < NUM; i++) {
+            for (int y = 0; y <= i; y++) {
+                System.out.printf("%s", y < i ? "*" : "*\n");
+            }
+        }
     }
 
     private static void streamsAndOptions() {
         List<Computer> computers = null;
-        if (true) {
+        if (!CollectionUtils
+                .emptyIfNull(computers)
+                .stream()
+                .anyMatch(Objects::nonNull)) {
+            System.out.println("VUOTO");
+        }
+        if (Optional.ofNullable(computers)
+                .map(Collection::stream)
+                .orElseGet(Stream::empty)
+                .allMatch(Objects::isNull)) {
+            System.out.println("VUOTO 2");
+        }
+
+        final boolean b = BooleanUtils.toBoolean(createRandomInt());
+        if (b) {
             computers = of();
             String computerStream = computers.stream()
                     .filter(Objects::nonNull)
@@ -48,7 +105,7 @@ public class FullOptionalsAndStreamsAndLambda {
             log.info(computerStream);
         }
         //stream da computers / map di SoundCard / filter nonNull / collect to Set
-        if (nonNull(computers)) {
+        if (CollectionUtils.isNotEmpty(computers)) {
             Set<SoundCard> uniqueSoundCards = retrieveUniqueSoundCards(computers);
             List<SoundCard> soundCards = retrieveSoundCards(computers);
             printSoundCards(uniqueSoundCards);
@@ -67,6 +124,10 @@ public class FullOptionalsAndStreamsAndLambda {
         }
     }
 
+    private static int createRandomInt() {
+        return new Random().ints(0, 3).findFirst().getAsInt();
+    }
+
     private static void printSoundCards(Set<SoundCard> soundCards) {
         log.info("SondCards:");
         soundCards.forEach(sc -> log.info("{}", sc.toString()));
@@ -74,6 +135,7 @@ public class FullOptionalsAndStreamsAndLambda {
 
     private static Set<SoundCard> retrieveUniqueSoundCards(List<Computer> computers) {
         return computers.stream()
+                .filter(Objects::nonNull)
                 .map(Computer::getSoundCard)
                 .filter(Objects::nonNull)
                 .filter(soundCard -> StringUtils.isNoneEmpty(soundCard.getVersion()))
@@ -87,6 +149,7 @@ public class FullOptionalsAndStreamsAndLambda {
 
     private static List<SoundCard> retrieveNonNullSoundCard(List<Computer> computers) {
         return computers.stream()
+                .filter(Objects::nonNull)
                 .map(Computer::getSoundCard)
                 .filter(Objects::nonNull)
                 .filter(soundCard -> StringUtils.isNoneEmpty(soundCard.getVersion()))
