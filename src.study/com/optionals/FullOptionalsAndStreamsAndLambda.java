@@ -43,6 +43,9 @@ public class FullOptionalsAndStreamsAndLambda {
 
     }
 
+    /**
+     * https://stackoverflow.com/questions/23699371/java-8-distinct-by-property
+     */
     private static void distinctByProperty() {
         List<Computer> computers = of();
         Set<String> distComputers = new HashSet<>(computers.size());
