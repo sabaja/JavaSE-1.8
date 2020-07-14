@@ -1,4 +1,5 @@
 com/expressionlambda/ExceptionWithLambda.class
+com/miscellaneus/Stampa.class
 com/immutable/Pizza$Ingrediente.class
 com/optionals/SoundCard.class
 com/interfaces/DueInterfacceAstratte_PreJava8.class
@@ -8,6 +9,7 @@ com/expressionlambda/City.class
 com/miscellaneus/StringConcatVsPlusOperator.class
 com/interfaces/Abstract_1.class
 com/generics/Cibo.class
+com/optionals/OS.class
 com/collectionsExercises/CheckSingleAddHashSet.class
 com/pattern/ProxyImage.class
 com/interfaces/Concrete_3.class
@@ -35,6 +37,7 @@ com/annotations/codility/Test1.class
 com/interfaces/ConflittoMetodoAstrattoInterfaccaConcreta.class
 com/pattern/Singleton.class
 com/miscellaneus/Triangle.class
+com/optionals/ElementDomain.class
 com/time/FamilyAgeComparator.class
 com/expressionlambda/ActorsManager.class
 com/miscellaneus/AlgoritmoDiBergerCalendario.class
@@ -58,11 +61,12 @@ com/expressionlambda/CastingCache.class
 com/lang/String_UtilityMethods.class
 com/rmi/IsSquareRoot.class
 com/interfaces/ConflittoTraMetodiRidefinitiEreditatiUnoDopoAltro.class
-com/optionals/Optionals.class
 com/immutable/ImmutableRGB.class
 com/expressionlambda/Actor.class
 com/sql/ExampleOfSearchPageWithModulateQuery.class
 com/expressionlambda/TestCityPredicate.class
+com/optionals/USB$USBBuilder.class
+com/optionals/SoundCard$SoundCardBuilder.class
 com/miscellaneus/StringaProvaLavoroAVR.class
 com/expressionlambda/ActorsFilterFacade$1.class
 com/lang/RawArray.class
@@ -75,6 +79,7 @@ com/miscellaneus/Obj2D.class
 com/immutable/ImmutableObject.class
 com/miscellaneus/Azz.class
 com/immutable/ImmutableObject2.class
+com/optionals/Computer$ComputerBuilder.class
 com/miscellaneus/RockSoloist.class
 com/collectionsExercises/CheckSingleException.class
 com/expressionlambda/ComeOvviareEffectiveFinal_wrappingValue_InAnArry.class
@@ -155,6 +160,7 @@ com/interfaces/Concrete_6.class
 com/pattern/MyTopicSubscriber.class
 com/miscellaneus/RealISoTriangle.class
 com/expressionlambda/CollectionsFunctionalVsStream.class
+com/optionals/FullOptionalsAndStreamsAndLambda.class
 com/generics/Carnivorous.class
 com/interfaces/Abstract2.class
 com/interfaces/Abstract3.class
