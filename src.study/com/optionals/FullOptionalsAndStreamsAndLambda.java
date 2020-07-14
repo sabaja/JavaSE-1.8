@@ -21,28 +21,67 @@ public class FullOptionalsAndStreamsAndLambda {
 
     //v.1 v.2 v.3 etc...
     private static final String VERSION_REGEX = "v\\d\\.";
+    public static final String SOUNDCARD_VERSION = "v1.0.1";
+    private static final String USB_VERSION = "v.1.0.2";
+    private static final String USB_VERSION_2 = "v.3.3.2";
+    private static final String SOUNDCARD_VERSION_2 = "v0.4.1";
 
     public static List<Computer> of() {
-        final Computer computer1 = new Computer(new SoundCard("v1.0.1", createUsb("v.1.0.2", BigInteger.valueOf(1_000_000))), "C1");
-        final Computer computer2 = new Computer(new SoundCard(null, createUsb("v.5.q.2", BigInteger.valueOf(1_000))), "C2");
+        final Computer computer1 = createPC(SOUNDCARD_VERSION, USB_VERSION, 1_000_000, "C1", Collections.singletonList(ElementDomain.MAIN_FRAME));
+        final Computer computer2 = createPC(null, "v.5.q.2", 1_000, "C2", Arrays.asList(ElementDomain.PERSONAL_COMPUTER, ElementDomain.WORKSTATION));
         final Computer computer3 = new Computer(null, "C3");
-        final Computer computer4 = new Computer(new SoundCard("v0.4.1", createUsb("v.2.1.0", BigInteger.valueOf(1111))), "C4");
+        final Computer computer4 = createPC(SOUNDCARD_VERSION_2, "v.2.1.0", 11_11, "C4", Collections.singletonList(ElementDomain.TABLET));
         final Computer computer5 = new Computer(new SoundCard("V-a", createUsb("AVANT", null)), "C5");
         final Computer computer6 = null;
-        final Computer computer7 = new Computer(new SoundCard("v0.4.1", null), "C7");
-        final Computer computer8 = new Computer(new SoundCard("NOT-SUPPORTED", createUsb("v.3.3.2", BigInteger.valueOf(1))), "C8");
-        final Computer computer9 = new Computer(new SoundCard("v1.0.1", createUsb("v.1.0.2", BigInteger.valueOf(999))), "C2");
-        return Arrays.asList(computer1, computer2, computer3, computer4, computer5, computer6, computer7, computer8, computer9);
+        final Computer computer7 = new Computer(new SoundCard(SOUNDCARD_VERSION_2, null), "C7");
+        final Computer computer8 = createPC("NOT-SUPPORTED", USB_VERSION_2, 1_2, "C8", Collections.singletonList(ElementDomain.NOT_DEFINED));
+        final Computer computer9 = createPC(SOUNDCARD_VERSION, USB_VERSION, 999_111, "C2", Arrays.asList(ElementDomain.PERSONAL_COMPUTER, ElementDomain.WORKSTATION, ElementDomain.SUPER_COMPUTER));
+        final Computer computer10 = createPC(SOUNDCARD_VERSION, USB_VERSION, 2011, "C2", Arrays.asList(ElementDomain.MAIN_FRAME, ElementDomain.SUPER_COMPUTER));
+        return Arrays.asList(computer1, computer2, null, computer3, computer4, computer5, null, computer6, computer7, computer8, computer9, null, computer10);
+    }
+
+    private static Computer createPC(String soundCardVersion, String usbVersion, int usbId, String computerName, List<ElementDomain> elementDomain) {
+        return new Computer(null, new SoundCard(soundCardVersion, createUsb(usbVersion, BigInteger.valueOf(usbId))), computerName, elementDomain);
     }
 
     public static void main(String[] args) {
-        //streamsAndOptions();
-        distinctByProperty();
-        System.out.println();
-        distinctByProperty2();
-        //stampa(6);
-        defaultInLambda();
+        if (false) {
+            streamsAndOptions();
+            distinctByProperty();
+            System.out.println();
+            distinctByProperty2();
+            stampa(6);
+            defaultInLambda();
+        }
 
+        printNumberOfUsbRate();
+
+    }
+
+    private static void printNumberOfUsbRate() {
+        final List<Computer> computers = of();
+
+        final BigInteger totalRatePC = retrieveMainFrameComputer(computers).stream()
+                .map(computer -> Optional.ofNullable(computer.getSoundCard())
+                        .map(SoundCard::getUsb)
+                        .map(USB::getId)
+                        .orElse(BigInteger.ZERO))
+                .reduce(BigInteger.ONE, BigInteger::add);
+        System.out.println("TOTAL of usb id: " + totalRatePC);
+    }
+
+
+    private static List<Computer> retrieveMainFrameComputer(List<Computer> computers) {
+        return computers.stream()
+                .filter(FullOptionalsAndStreamsAndLambda::isMainFrame)
+                .collect(Collectors.toList());
+    }
+
+    private static boolean isMainFrame(final Computer computer) {
+        return Optional.ofNullable(computer).map(Computer::getType).isPresent() &&
+                Optional.ofNullable(computer.getType())
+                        .map(t -> t.contains(ElementDomain.MAIN_FRAME))
+                        .orElse(false);
     }
 
     private static USB createUsb(final String version, final BigInteger id) {
@@ -106,19 +145,7 @@ public class FullOptionalsAndStreamsAndLambda {
 
     private static void streamsAndOptions() {
         List<Computer> computers = null;
-        if (!CollectionUtils
-                .emptyIfNull(computers)
-                .stream()
-                .anyMatch(Objects::nonNull)) {
-            System.out.println("VUOTO");
-        }
-        if (Optional.ofNullable(computers)
-                .map(Collection::stream)
-                .orElseGet(Stream::empty)
-                .allMatch(Objects::isNull)) {
-            System.out.println("VUOTO 2");
-        }
-
+        checkEmpty(computers);
         final boolean b = BooleanUtils.toBoolean(createRandomInt());
         if (b) {
             computers = of();
@@ -135,6 +162,7 @@ public class FullOptionalsAndStreamsAndLambda {
             Set<SoundCard> uniqueSoundCards = retrieveUniqueSoundCards(computers);
             List<SoundCard> soundCards = retrieveSoundCards(computers);
             printSoundCards(uniqueSoundCards);
+
             if (isSoundCardVersioned(computers)
             ) {
                 log.info("USBs");
@@ -147,6 +175,21 @@ public class FullOptionalsAndStreamsAndLambda {
                         .collect(Collectors.toMap(SoundCard::getVersion, soundCard -> soundCard.getUsb().getVersion()));
                 soundCardsmap.forEach((key, value) -> log.info("{} - {}", key, value));
             }
+        }
+    }
+
+    private static void checkEmpty(List<Computer> computers) {
+        if (CollectionUtils
+                .emptyIfNull(computers)
+                .stream()
+                .allMatch(Objects::isNull)) {
+            System.out.println("VUOTO");
+        }
+        if (Optional.ofNullable(computers)
+                .map(Collection::stream)
+                .orElseGet(Stream::empty)
+                .allMatch(Objects::isNull)) {
+            System.out.println("VUOTO 2");
         }
     }
 

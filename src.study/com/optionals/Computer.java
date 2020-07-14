@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -16,6 +17,7 @@ public final class Computer implements Serializable {
     private OS os;
     private SoundCard soundCard;
     private String name;
+    private List<ElementDomain> type;
 
     public Computer(SoundCard soundCard, String name) {
         this.soundCard = soundCard;
