@@ -6,6 +6,7 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.math.BigInteger;
 import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -22,15 +23,15 @@ public class FullOptionalsAndStreamsAndLambda {
     private static final String VERSION_REGEX = "v\\d\\.";
 
     public static List<Computer> of() {
-        final Computer computer1 = new Computer(new SoundCard("v1.0.1", new USB("v0.0.1")), "C1");
-        final Computer computer2 = new Computer(new SoundCard(null, new USB("v0.3.1")), "C2");
+        final Computer computer1 = new Computer(new SoundCard("v1.0.1", createUsb("v.1.0.2", BigInteger.valueOf(1_000_000))), "C1");
+        final Computer computer2 = new Computer(new SoundCard(null, createUsb("v.5.q.2", BigInteger.valueOf(1_000))), "C2");
         final Computer computer3 = new Computer(null, "C3");
-        final Computer computer4 = new Computer(new SoundCard("v0.4.1", new USB("v4.0.1")), "C4");
-        final Computer computer5 = new Computer(new SoundCard("V-a", new USB("AVANT")), "C5");
+        final Computer computer4 = new Computer(new SoundCard("v0.4.1", createUsb("v.2.1.0", BigInteger.valueOf(1111))), "C4");
+        final Computer computer5 = new Computer(new SoundCard("V-a", createUsb("AVANT", null)), "C5");
         final Computer computer6 = null;
         final Computer computer7 = new Computer(new SoundCard("v0.4.1", null), "C7");
-        final Computer computer8 = new Computer(new SoundCard("NOT-SUPPORTED", new USB("v3.3.1")), "C8");
-        final Computer computer9 = new Computer(new SoundCard("v1.0.1", new USB("v0.0.1")), "C2");
+        final Computer computer8 = new Computer(new SoundCard("NOT-SUPPORTED", createUsb("v.3.3.2", BigInteger.valueOf(1))), "C8");
+        final Computer computer9 = new Computer(new SoundCard("v1.0.1", createUsb("v.1.0.2", BigInteger.valueOf(999))), "C2");
         return Arrays.asList(computer1, computer2, computer3, computer4, computer5, computer6, computer7, computer8, computer9);
     }
 
@@ -40,7 +41,15 @@ public class FullOptionalsAndStreamsAndLambda {
         System.out.println();
         distinctByProperty2();
         //stampa(6);
+        defaultInLambda();
 
+    }
+
+    private static USB createUsb(final String version, final BigInteger id) {
+        return USB.builder()
+                .id(id)
+                .version(version)
+                .build();
     }
 
     /**
@@ -68,10 +77,11 @@ public class FullOptionalsAndStreamsAndLambda {
                 )).values()
                 .stream()
                 .filter(computer -> nonNull(computer.getName()))
-                .sorted((o1, o2) -> o1.getName().compareTo(o2.getName()))
+                .sorted(Comparator.comparing(Computer::getName))
                 .forEach(System.out::println);
 
     }
+
 
     private static void stampa(final int NUM) {
         for (int i = 0; i < NUM; i++) {
@@ -79,6 +89,19 @@ public class FullOptionalsAndStreamsAndLambda {
                 System.out.printf("%s", y < i ? "*" : "*\n");
             }
         }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Structured Blocked Comment
+    ///////////////////////////////////////////////////////////////////////////
+    private static void defaultInLambda() {
+        List<Computer> computers = null;
+        final long COUNT = Optional.ofNullable(computers)
+                .orElse(of())
+                .stream()
+                .filter(Objects::nonNull)
+                .count();
+        System.out.println("FullOptionalsAndStreamsAndLambda.defaultInLambda " + COUNT);
     }
 
     private static void streamsAndOptions() {

@@ -1,13 +1,21 @@
 package com.optionals;
 
 
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+import java.math.BigInteger;
 
 @Data
-public final class USB {
+@NoArgsConstructor
+@Builder
+public final class USB implements Serializable {
+    private static final long serialVersionUID = 6360236213150427439L;
     private String version;
+    private BigInteger id;
 
-    public USB(String version) {
-        this.version = version;
+    public USB(String s, BigInteger valueOf) {
     }
 }
