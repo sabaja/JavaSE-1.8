@@ -7,6 +7,7 @@ import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigInteger;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -19,29 +20,29 @@ import static java.util.Objects.nonNull;
 @Slf4j
 public class FullOptionalsAndStreamsAndLambda {
 
+    public static final String SOUNDCARD_VERSION = "v1.0.1";
     //v.1 v.2 v.3 etc...
     private static final String VERSION_REGEX = "v\\d\\.";
-    public static final String SOUNDCARD_VERSION = "v1.0.1";
     private static final String USB_VERSION = "v.1.0.2";
     private static final String USB_VERSION_2 = "v.3.3.2";
     private static final String SOUNDCARD_VERSION_2 = "v0.4.1";
 
     public static List<Computer> of() {
-        final Computer computer1 = createPC(SOUNDCARD_VERSION, USB_VERSION, 1_000_000, "C1", Collections.singletonList(ElementDomain.MAIN_FRAME));
-        final Computer computer2 = createPC(null, "v.5.q.2", 1_000, "C2", Arrays.asList(ElementDomain.PERSONAL_COMPUTER, ElementDomain.WORKSTATION));
+        final Computer computer1 = createPC(SOUNDCARD_VERSION, USB_VERSION, 1_000_000, "C1", Collections.singletonList(ElementDomain.MAIN_FRAME), LocalDate.of(2018, 1, 25));
+        final Computer computer2 = createPC(null, "v.5.q.2", 1_000, "C2", Arrays.asList(ElementDomain.PERSONAL_COMPUTER, ElementDomain.WORKSTATION), LocalDate.of(2008, 4, 2));
         final Computer computer3 = new Computer(null, "C3");
-        final Computer computer4 = createPC(SOUNDCARD_VERSION_2, "v.2.1.0", 11_11, "C4", Collections.singletonList(ElementDomain.TABLET));
+        final Computer computer4 = createPC(SOUNDCARD_VERSION_2, "v.2.1.0", 11_11, "C4", Collections.singletonList(ElementDomain.TABLET), LocalDate.of(2020, 6, 31));
         final Computer computer5 = new Computer(new SoundCard("V-a", createUsb("AVANT", null)), "C5");
         final Computer computer6 = null;
         final Computer computer7 = new Computer(new SoundCard(SOUNDCARD_VERSION_2, null), "C7");
-        final Computer computer8 = createPC("NOT-SUPPORTED", USB_VERSION_2, 1_2, "C8", Collections.singletonList(ElementDomain.NOT_DEFINED));
-        final Computer computer9 = createPC(SOUNDCARD_VERSION, USB_VERSION, 999_111, "C2", Arrays.asList(ElementDomain.PERSONAL_COMPUTER, ElementDomain.WORKSTATION, ElementDomain.SUPER_COMPUTER));
-        final Computer computer10 = createPC(SOUNDCARD_VERSION, USB_VERSION, 2011, "C2", Arrays.asList(ElementDomain.MAIN_FRAME, ElementDomain.SUPER_COMPUTER));
+        final Computer computer8 = createPC("NOT-SUPPORTED", USB_VERSION_2, 1_2, "C8", Collections.singletonList(ElementDomain.NOT_DEFINED), LocalDate.of(9999, 12, 31));
+        final Computer computer9 = createPC(SOUNDCARD_VERSION, USB_VERSION, 999_111, "C2", Arrays.asList(ElementDomain.PERSONAL_COMPUTER, ElementDomain.WORKSTATION, ElementDomain.SUPER_COMPUTER), LocalDate.of(2017, 3, 13));
+        final Computer computer10 = createPC(SOUNDCARD_VERSION, USB_VERSION, 2011, "C2", Arrays.asList(ElementDomain.MAIN_FRAME, ElementDomain.SUPER_COMPUTER), LocalDate.of(2018, 1, 25));
         return Arrays.asList(computer1, computer2, null, computer3, computer4, computer5, null, computer6, computer7, computer8, computer9, null, computer10);
     }
 
-    private static Computer createPC(String soundCardVersion, String usbVersion, int usbId, String computerName, List<ElementDomain> elementDomain) {
-        return new Computer(null, new SoundCard(soundCardVersion, createUsb(usbVersion, BigInteger.valueOf(usbId))), computerName, elementDomain);
+    private static Computer createPC(String soundCardVersion, String usbVersion, int usbId, String computerName, List<ElementDomain> elementDomain, LocalDate createAt) {
+        return new Computer(null, new SoundCard(soundCardVersion, createUsb(usbVersion, BigInteger.valueOf(usbId))), computerName, elementDomain, createAt);
     }
 
     public static void main(String[] args) {
@@ -50,11 +51,26 @@ public class FullOptionalsAndStreamsAndLambda {
             distinctByProperty();
             System.out.println();
             distinctByProperty2();
-            stampa(6);
+            printPyramid(6);
             defaultInLambda();
+            printNumberOfUsbRate();
         }
 
-        printNumberOfUsbRate();
+        printDeMorganLaw();
+    }
+
+    private static void printDeMorganLaw() {
+        int x = 4, y = 3;
+        if ((!(x < 3 || y > 2)) == (x >= 3 && y <= 2)) {
+            System.out.println("first case");
+        } else {
+            System.out.println("second case");
+        }
+        int a = 10;
+        int b = 5;
+        int c = 20;
+        System.out.println(a < c && b > c);
+        System.out.println((a < c || b > c) + "\n");
 
     }
 
@@ -122,7 +138,7 @@ public class FullOptionalsAndStreamsAndLambda {
     }
 
 
-    private static void stampa(final int NUM) {
+    private static void printPyramid(final int NUM) {
         for (int i = 0; i < NUM; i++) {
             for (int y = 0; y <= i; y++) {
                 System.out.printf("%s", y < i ? "*" : "*\n");
@@ -145,7 +161,7 @@ public class FullOptionalsAndStreamsAndLambda {
 
     private static void streamsAndOptions() {
         List<Computer> computers = null;
-        checkEmpty(computers);
+        checkIfEmpty(computers);
         final boolean b = BooleanUtils.toBoolean(createRandomInt());
         if (b) {
             computers = of();
@@ -178,7 +194,7 @@ public class FullOptionalsAndStreamsAndLambda {
         }
     }
 
-    private static void checkEmpty(List<Computer> computers) {
+    private static void checkIfEmpty(List<Computer> computers) {
         if (CollectionUtils
                 .emptyIfNull(computers)
                 .stream()
@@ -255,4 +271,18 @@ public class FullOptionalsAndStreamsAndLambda {
         return matcher.find();
     }
 
+    private static List<LocalDate> createLocalDates(List<Computer> computers) {
+        return computers.stream()
+                .filter(Objects::nonNull)
+                .map(Computer::getCreateAt)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+    private static LocalDate computeMaxLocalDate(List<Computer> computers) {
+        return createLocalDates(computers)
+                .stream()
+                .max(LocalDate::compareTo)
+                .orElse(null);
+    }
 }

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -18,6 +19,7 @@ public final class Computer implements Serializable {
     private SoundCard soundCard;
     private String name;
     private List<ElementDomain> type;
+    private LocalDate createAt;
 
     public Computer(SoundCard soundCard, String name) {
         this.soundCard = soundCard;
