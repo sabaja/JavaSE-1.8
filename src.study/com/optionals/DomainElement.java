@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
-public enum ElementDomain {
+public enum DomainElement {
     MAIN_FRAME("MAIN_FRAME"),
     PERSONAL_COMPUTER("PERSONAL_COMPUTER"),
     WORKSTATION("WORKSTATION"),
@@ -14,16 +14,16 @@ public enum ElementDomain {
     SUPER_COMPUTER("SUPER_COMPUTE"),
     NOT_DEFINED("-");
 
-    private static final Map<String, ElementDomain> mappedValue = Stream.of(values()).collect(Collectors.toMap(ElementDomain::getValue, Function.identity()));
+    private static final Map<String, DomainElement> mappedValue = Stream.of(values()).collect(Collectors.toMap(DomainElement::getValue, Function.identity()));
 
     private final String value;
 
 
-    ElementDomain(String value) {
+    DomainElement(String value) {
         this.value = value;
     }
 
-    public static ElementDomain fromValue(String value) {
+    public static DomainElement fromValue(String value) {
         return mappedValue.get(value);
     }
 

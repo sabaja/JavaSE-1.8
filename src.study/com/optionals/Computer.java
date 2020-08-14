@@ -18,7 +18,7 @@ public final class Computer implements Serializable {
     private OS os;
     private SoundCard soundCard;
     private String name;
-    private List<ElementDomain> type;
+    private List<DomainElement> type;
     private LocalDate createAt;
 
     public Computer(SoundCard soundCard, String name) {
