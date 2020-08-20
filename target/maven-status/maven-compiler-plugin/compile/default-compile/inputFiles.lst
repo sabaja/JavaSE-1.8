@@ -5,7 +5,6 @@
 /home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/net/URLGetContent_scaricare_un_immagine.java
 /home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/lang/Reflection.java
 /home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/miscellaneus/FunctionalInterfaceAndAnonymousClass.java
-/home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/optionals/ElementDomain.java
 /home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/expressionlambda/UnaryOperatorExample.java
 /home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/expressionlambda/ComparatorsExample.java
 /home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/annotations/RunTest.java
@@ -21,6 +20,7 @@
 /home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/log/ComeSiUsaUnFileLOGconLeProperties.java
 /home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/multithreading/SyncronizedExample2.java
 /home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/annotations/codility/Solution.java
+/home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/optionals/ComputerMapper.java
 /home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/time/TemporalQueryExample.java
 /home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/optionals/USB.java
 /home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/rmi/RMISquareRootClient.java
@@ -70,7 +70,6 @@
 /home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/multithreading/CyclicBarrierExample.java
 /home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/time/LocalTimeExample.java
 /home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/XML/asdfasdfasd.java
-/home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/optionals/FullOptionalsAndStreamsAndLambda.java
 /home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/multithreadsExercises/CollaborazioneScritturaLetturasuFile.java
 /home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/io/NonScrivereUnaRigaParticolareInUnFile.java
 /home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/SQL_JDBC_20_30_40_41_42/TRYWITHRESOURCE_jdk_1_7_.java
@@ -175,6 +174,7 @@
 /home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/lang/SystemGetProperties.java
 /home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/miscellaneus/Stampa.java
 /home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/annotations/RepeatableAnnotations.java
+/home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/optionals/DomainElement.java
 /home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/miscellaneus/AlgoritmoDiBergerCalendario.java
 /home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/multithreading/TimerTaskExample.java
 /home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/genericAndReflectionExercises/CompilerExercise.java
@@ -195,6 +195,7 @@
 /home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/reactive/programming/FirstExampleOfReactiveProgram.java
 /home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/expressionlambda/IllegalStateExceptionExample.java
 /home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/SQL_JDBC_20_30_40_41_42/ResulsetAggiornabiliJdbc30.java
+/home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/optionals/FullOptionalsAndStreamsAndLambdaApplication.java
 /home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/web/service/SOAPClientSAAJ2.java
 /home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/io/NIO2/ScriveretramiteFile_bufferedWriter.java
 /home/sabaja/Scrivania/workspaces/ECLIPSE/ECLIPSE-Back-up/ECLIPSE-workspace-JavaSE-1.8/JavaSE-1.8/src.study/com/immutable/ImmutableObject.java

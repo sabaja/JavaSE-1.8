@@ -14,7 +14,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 import java.math.BigInteger;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -42,24 +44,6 @@ public class FullOptionalsAndStreamsAndLambdaApplication {
         SpringApplication.run(FullOptionalsAndStreamsAndLambdaApplication.class, args);
     }
 
-    public List<Computer> of() {
-        final Computer computer1 = createPC(SOUNDCARD_VERSION, USB_VERSION, 1_000_000, "C1", Collections.singletonList(DomainElement.MAIN_FRAME), LocalDate.of(2018, 1, 25));
-        final Computer computer2 = createPC(null, "v.5.q.2", 1_000, "C2", Arrays.asList(DomainElement.PERSONAL_COMPUTER, DomainElement.WORKSTATION), LocalDate.of(2008, 4, 2));
-        final Computer computer3 = new Computer(null, "C3");
-        final Computer computer4 = createPC(SOUNDCARD_VERSION_2, "v.2.1.0", 11_11, "C4", Collections.singletonList(DomainElement.TABLET), LocalDate.of(2020, 6, 30));
-        final Computer computer5 = new Computer(new SoundCard("V-a", createUsb("AVANT", null)), "C5");
-        final Computer computer6 = null;
-        final Computer computer7 = new Computer(new SoundCard(SOUNDCARD_VERSION_2, null), "C7");
-        final Computer computer8 = createPC("NOT-SUPPORTED", USB_VERSION_2, 1_2, "C8", Collections.singletonList(DomainElement.NOT_DEFINED), LocalDate.of(9999, 12, 31));
-        final Computer computer9 = createPC(SOUNDCARD_VERSION, USB_VERSION, 999_111, "C2", Arrays.asList(DomainElement.PERSONAL_COMPUTER, DomainElement.WORKSTATION, DomainElement.SUPER_COMPUTER), LocalDate.of(2017, 3, 13));
-        final Computer computer10 = createPC(SOUNDCARD_VERSION, USB_VERSION, 2011, "C2", Arrays.asList(DomainElement.MAIN_FRAME, DomainElement.SUPER_COMPUTER), LocalDate.of(2018, 1, 25));
-        return Arrays.asList(computer1, computer2, null, computer3, computer4, computer5, null, computer6, computer7, computer8, computer9, null, computer10);
-    }
-
-    private Computer createPC(String soundCardVersion, String usbVersion, int usbId, String computerName, List<DomainElement> domainElement, LocalDate createAt) {
-        return new Computer(null, new SoundCard(soundCardVersion, createUsb(usbVersion, BigInteger.valueOf(usbId))), computerName, domainElement, createAt);
-    }
-
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
         return args -> {
@@ -75,15 +59,41 @@ public class FullOptionalsAndStreamsAndLambdaApplication {
                 final Stream<Computer> mutableBuilderOfStream = createStreamBuilder(of());
                 mutableBuilderOfStream.forEach(e -> log.info("{}", e));
                 createByGenerateRandomStreamInt().forEach(e -> log.info("{}", e));
-                useOfFlatMap(of()).forEach(e -> log.info("{}", e));
             }
+            log.info("Start@{}", startUpTime(ctx));
+            useOfFlatMap(of()).forEach(e -> log.info("{}", e));
             log.info("{}", mapstructReturnEmptyList());
             log.info("{}", returnEmptyList());
+
         };
     }
 
+    public List<Computer> of() {
+        final Computer computer1 = createPC(BigInteger.valueOf(11001), SOUNDCARD_VERSION, USB_VERSION, 1_000_000, "C1", Collections.singletonList(DomainElement.MAIN_FRAME), LocalDate.of(2018, 1, 25));
+        final Computer computer2 = createPC(BigInteger.valueOf(1202), null, "v.5.q.2", 1_000, "C2", Arrays.asList(DomainElement.PERSONAL_COMPUTER, DomainElement.WORKSTATION), LocalDate.of(2008, 4, 2));
+        final Computer computer3 = new Computer(BigInteger.valueOf(1043), null, "C3");
+        final Computer computer4 = createPC(BigInteger.valueOf(101004), SOUNDCARD_VERSION_2, "v.2.1.0", 11_11, "C4", Collections.singletonList(DomainElement.TABLET), LocalDate.of(2020, 6, 30));
+        final Computer computer5 = new Computer(BigInteger.valueOf(999995),new SoundCard("V-a", createUsb("AVANT", null)), "C5");
+        final Computer computer6 = null;
+        final Computer computer7 = new Computer(BigInteger.valueOf(90909106),new SoundCard(SOUNDCARD_VERSION_2, null), "C7");
+        final Computer computer8 = createPC(BigInteger.valueOf(107), "NOT-SUPPORTED", USB_VERSION_2, 1_2, "C8", Collections.singletonList(DomainElement.NOT_DEFINED), LocalDate.of(9999, 12, 31));
+        final Computer computer9 = createPC(BigInteger.valueOf(8), SOUNDCARD_VERSION, USB_VERSION, 999_111, "C2", Arrays.asList(DomainElement.PERSONAL_COMPUTER, DomainElement.WORKSTATION, DomainElement.SUPER_COMPUTER), LocalDate.of(2017, 3, 13));
+        final Computer computer10 = createPC(BigInteger.valueOf(7609), SOUNDCARD_VERSION, USB_VERSION, 2011, "C2", Arrays.asList(DomainElement.MAIN_FRAME, DomainElement.SUPER_COMPUTER), LocalDate.of(2018, 1, 25));
+        return Arrays.asList(computer1, computer2, null, computer3, computer4, computer5, null, computer6, computer7, computer8, computer9, null, computer10);
+    }
+
+    private LocalDateTime startUpTime(ApplicationContext ctx) {
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(ctx.getStartupDate()),
+                TimeZone.getDefault().toZoneId());
+    }
+
+    private Computer createPC(BigInteger id, String soundCardVersion, String usbVersion, int usbId, String computerName, List<DomainElement> domainElement, LocalDate createAt) {
+        return new Computer(id, null, new SoundCard(soundCardVersion, createUsb(usbVersion, BigInteger.valueOf(usbId))), computerName, domainElement, createAt);
+    }
+
     private void printDeMorganLaw() {
-        int x = 4, y = 3;
+        int x = 4;
+        int y = 3;
         if ((!(x < 3 || y > 2)) == (x >= 3 && y <= 2)) {
             log.info("first case");
         } else {
@@ -329,13 +339,18 @@ public class FullOptionalsAndStreamsAndLambdaApplication {
     private List<DomainElement> useOfFlatMap(List<Computer> computers) {
         return computers.stream()
                 .filter(Objects::nonNull)
-                .flatMap(computer -> CollectionUtils.emptyIfNull(computer.getType()).stream())
+                .flatMap(computer -> {
+                    final List<DomainElement> domainElements = computer.getType();
+                    return Optional.ofNullable(domainElements)
+                            .orElseGet(() -> Collections.singletonList(DomainElement.NOT_DEFINED))
+                            .stream();
+                })
                 .collect(Collectors.toList());
     }
 
     private List<Computer> mapstructReturnEmptyList() {
         List<Computer> list = new ArrayList<>();
-        return mapper.mapstructReturnEmptyList(list);
+        return this.mapper.mapstructReturnEmptyList(list);
     }
 
     private List<Computer> returnEmptyList() {
