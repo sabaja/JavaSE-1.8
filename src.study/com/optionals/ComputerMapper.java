@@ -1,11 +1,10 @@
 package com.optionals;
 
-import org.mapstruct.IterableMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.NullValueMappingStrategy;
+import org.mapstruct.*;
 
 import java.util.List;
 
+@DecoratedWith(ComputerMapperDecorator.class)
 @Mapper(componentModel = "spring")
 public interface ComputerMapper {
 
@@ -16,4 +15,7 @@ public interface ComputerMapper {
     default List<Computer> mapstructReturnEmptyList(List<Computer> computers) {
         return computers;
     }
+
+    @Mapping(target = "domainElements", ignore = true)
+    ComputerElementBin computerToBin(Computer computer);
 }

@@ -28,7 +28,7 @@ import static java.util.Objects.nonNull;
 
 @Slf4j
 @SpringBootApplication
-public class FullOptionalsAndStreamsAndLambdaApplication {
+public class FullOptionalStreamAndLambdaApplication {
     public static final String SOUNDCARD_VERSION = "v1.0.1";
 
     //v.1 v.2 v.3 etc...
@@ -41,12 +41,13 @@ public class FullOptionalsAndStreamsAndLambdaApplication {
     private ComputerMapper mapper;
 
     public static void main(String[] args) {
-        SpringApplication.run(FullOptionalsAndStreamsAndLambdaApplication.class, args);
+        SpringApplication.run(FullOptionalStreamAndLambdaApplication.class, args);
     }
 
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
         return args -> {
+            final List<Computer> computers = of();
             if (false) {
                 streamsAndOptions();
                 distinctByProperty();
@@ -55,13 +56,14 @@ public class FullOptionalsAndStreamsAndLambdaApplication {
                 defaultInLambda();
                 printNumberOfUsbRate();
                 printDeMorganLaw();
-                log.info("Max date is {}", computeMaxLocalDate(of()));
-                final Stream<Computer> mutableBuilderOfStream = createStreamBuilder(of());
+                log.info("Max date is {}", computeMaxLocalDate(computers));
+                final Stream<Computer> mutableBuilderOfStream = createStreamBuilder(computers);
                 mutableBuilderOfStream.forEach(e -> log.info("{}", e));
                 createByGenerateRandomStreamInt().forEach(e -> log.info("{}", e));
             }
             log.info("Start@{}", startUpTime(ctx));
-            useOfFlatMap(of()).forEach(e -> log.info("{}", e));
+            useOfFlatMap(computers).forEach(e -> log.info("{}", e));
+            retrieveComputerElements(computers).forEach(e -> log.info("{}", e));
             log.info("{}", mapstructReturnEmptyList());
             log.info("{}", returnEmptyList());
 
@@ -73,9 +75,9 @@ public class FullOptionalsAndStreamsAndLambdaApplication {
         final Computer computer2 = createPC(BigInteger.valueOf(1202), null, "v.5.q.2", 1_000, "C2", Arrays.asList(DomainElement.PERSONAL_COMPUTER, DomainElement.WORKSTATION), LocalDate.of(2008, 4, 2));
         final Computer computer3 = new Computer(BigInteger.valueOf(1043), null, "C3");
         final Computer computer4 = createPC(BigInteger.valueOf(101004), SOUNDCARD_VERSION_2, "v.2.1.0", 11_11, "C4", Collections.singletonList(DomainElement.TABLET), LocalDate.of(2020, 6, 30));
-        final Computer computer5 = new Computer(BigInteger.valueOf(999995),new SoundCard("V-a", createUsb("AVANT", null)), "C5");
+        final Computer computer5 = new Computer(BigInteger.valueOf(999995), new SoundCard("V-a", createUsb("AVANT", null)), "C5");
         final Computer computer6 = null;
-        final Computer computer7 = new Computer(BigInteger.valueOf(90909106),new SoundCard(SOUNDCARD_VERSION_2, null), "C7");
+        final Computer computer7 = new Computer(BigInteger.valueOf(90909106), new SoundCard(SOUNDCARD_VERSION_2, null), "C7");
         final Computer computer8 = createPC(BigInteger.valueOf(107), "NOT-SUPPORTED", USB_VERSION_2, 1_2, "C8", Collections.singletonList(DomainElement.NOT_DEFINED), LocalDate.of(9999, 12, 31));
         final Computer computer9 = createPC(BigInteger.valueOf(8), SOUNDCARD_VERSION, USB_VERSION, 999_111, "C2", Arrays.asList(DomainElement.PERSONAL_COMPUTER, DomainElement.WORKSTATION, DomainElement.SUPER_COMPUTER), LocalDate.of(2017, 3, 13));
         final Computer computer10 = createPC(BigInteger.valueOf(7609), SOUNDCARD_VERSION, USB_VERSION, 2011, "C2", Arrays.asList(DomainElement.MAIN_FRAME, DomainElement.SUPER_COMPUTER), LocalDate.of(2018, 1, 25));
@@ -120,7 +122,7 @@ public class FullOptionalsAndStreamsAndLambdaApplication {
     }
 
     private List<Computer> retrieveMainFrameComputer(List<Computer> computers) {
-        FullOptionalsAndStreamsAndLambdaApplication streamsAndLambda = new FullOptionalsAndStreamsAndLambdaApplication();
+        FullOptionalStreamAndLambdaApplication streamsAndLambda = new FullOptionalStreamAndLambdaApplication();
         return computers.stream()
                 .filter(streamsAndLambda::isMainFrame)
                 .collect(Collectors.toList());
@@ -216,7 +218,7 @@ public class FullOptionalsAndStreamsAndLambdaApplication {
             if (isSoundCardVersioned(computers)
             ) {
                 log.info("USBs");
-                FullOptionalsAndStreamsAndLambdaApplication streamsAndLambda = new FullOptionalsAndStreamsAndLambdaApplication();
+                FullOptionalStreamAndLambdaApplication streamsAndLambda = new FullOptionalStreamAndLambdaApplication();
                 computers.stream()
                         .filter(streamsAndLambda::isUSBVersioned)
                         .forEach(usb -> log.info("{}", usb.toString()));
@@ -285,7 +287,7 @@ public class FullOptionalsAndStreamsAndLambdaApplication {
     }
 
     private boolean isSoundCardVersioned(List<Computer> computers) {
-        FullOptionalsAndStreamsAndLambdaApplication streamsAndLambda = new FullOptionalsAndStreamsAndLambdaApplication();
+        FullOptionalStreamAndLambdaApplication streamsAndLambda = new FullOptionalStreamAndLambdaApplication();
         return computers.stream()
                 .map(Computer::getSoundCard)
                 .filter(Objects::nonNull)
@@ -336,15 +338,20 @@ public class FullOptionalsAndStreamsAndLambdaApplication {
         return Stream.generate(new java.util.Random()::nextInt).limit(10);
     }
 
-    private List<DomainElement> useOfFlatMap(List<Computer> computers) {
+    private Set<DomainElement> useOfFlatMap(List<Computer> computers) {
         return computers.stream()
                 .filter(Objects::nonNull)
-                .flatMap(computer -> {
-                    final List<DomainElement> domainElements = computer.getType();
-                    return Optional.ofNullable(domainElements)
-                            .orElseGet(() -> Collections.singletonList(DomainElement.NOT_DEFINED))
-                            .stream();
-                })
+                .flatMap(computer -> CollectionUtils.emptyIfNull(computer.getType()).stream())
+                .collect(Collectors.toCollection(
+                        () -> new TreeSet<>(Comparator.comparing(DomainElement::getValue))
+                ));
+    }
+
+    private List<ComputerElementBin> retrieveComputerElements(List<Computer> computers) {
+        return computers.stream()
+                .filter(Objects::nonNull)
+                .map(mapper::computerToBin)
+                .filter(e -> CollectionUtils.isNotEmpty(e.getDomainElements()))
                 .collect(Collectors.toList());
     }
 

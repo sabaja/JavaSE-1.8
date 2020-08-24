@@ -4,6 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>JavaSE-1.8</groupId>
     <artifactId>JavaSE-1.8</artifactId>
+    <packaging>pom</packaging>
     <version>0.0.1-SNAPSHOT</version>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -45,7 +46,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.optionals.FullOptionalsAndStreamsAndLambdaApplication</mainClass>
+                    <mainClass>com.optionals.FullOptionalStreamAndLambdaApplication</mainClass>
                 </configuration>
             </plugin>
             <plugin>
