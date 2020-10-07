@@ -16,6 +16,6 @@ public interface ComputerMapper {
         return computers;
     }
 
-    @Mapping(target = "domainElements", ignore = true)
+    @Mapping(target = "computerTypes", ignore = true)
     ComputerElementBin computerToBin(Computer computer);
 }

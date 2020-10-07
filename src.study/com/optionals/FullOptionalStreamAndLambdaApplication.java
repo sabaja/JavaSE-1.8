@@ -71,16 +71,16 @@ public class FullOptionalStreamAndLambdaApplication {
     }
 
     public List<Computer> of() {
-        final Computer computer1 = createPC(BigInteger.valueOf(11001), SOUNDCARD_VERSION, USB_VERSION, 1_000_000, "C1", Collections.singletonList(DomainElement.MAIN_FRAME), LocalDate.of(2018, 1, 25));
-        final Computer computer2 = createPC(BigInteger.valueOf(1202), null, "v.5.q.2", 1_000, "C2", Arrays.asList(DomainElement.PERSONAL_COMPUTER, DomainElement.WORKSTATION), LocalDate.of(2008, 4, 2));
+        final Computer computer1 = createPC(BigInteger.valueOf(11001), SOUNDCARD_VERSION, USB_VERSION, 1_000_000, "C1", Collections.singletonList(ComputerType.MAIN_FRAME), LocalDate.of(2018, 1, 25));
+        final Computer computer2 = createPC(BigInteger.valueOf(1202), null, "v.5.q.2", 1_000, "C2", Arrays.asList(ComputerType.PERSONAL_COMPUTER, ComputerType.WORKSTATION), LocalDate.of(2008, 4, 2));
         final Computer computer3 = new Computer(BigInteger.valueOf(1043), null, "C3");
-        final Computer computer4 = createPC(BigInteger.valueOf(101004), SOUNDCARD_VERSION_2, "v.2.1.0", 11_11, "C4", Collections.singletonList(DomainElement.TABLET), LocalDate.of(2020, 6, 30));
+        final Computer computer4 = createPC(BigInteger.valueOf(101004), SOUNDCARD_VERSION_2, "v.2.1.0", 11_11, "C4", Collections.singletonList(ComputerType.TABLET), LocalDate.of(2020, 6, 30));
         final Computer computer5 = new Computer(BigInteger.valueOf(999995), new SoundCard("V-a", createUsb("AVANT", null)), "C5");
         final Computer computer6 = null;
         final Computer computer7 = new Computer(BigInteger.valueOf(90909106), new SoundCard(SOUNDCARD_VERSION_2, null), "C7");
-        final Computer computer8 = createPC(BigInteger.valueOf(107), "NOT-SUPPORTED", USB_VERSION_2, 1_2, "C8", Collections.singletonList(DomainElement.NOT_DEFINED), LocalDate.of(9999, 12, 31));
-        final Computer computer9 = createPC(BigInteger.valueOf(8), SOUNDCARD_VERSION, USB_VERSION, 999_111, "C2", Arrays.asList(DomainElement.PERSONAL_COMPUTER, DomainElement.WORKSTATION, DomainElement.SUPER_COMPUTER), LocalDate.of(2017, 3, 13));
-        final Computer computer10 = createPC(BigInteger.valueOf(7609), SOUNDCARD_VERSION, USB_VERSION, 2011, "C2", Arrays.asList(DomainElement.MAIN_FRAME, DomainElement.SUPER_COMPUTER), LocalDate.of(2018, 1, 25));
+        final Computer computer8 = createPC(BigInteger.valueOf(107), "NOT-SUPPORTED", USB_VERSION_2, 1_2, "C8", Collections.singletonList(ComputerType.NOT_DEFINED), LocalDate.of(9999, 12, 31));
+        final Computer computer9 = createPC(BigInteger.valueOf(8), SOUNDCARD_VERSION, USB_VERSION, 999_111, "C2", Arrays.asList(ComputerType.PERSONAL_COMPUTER, ComputerType.WORKSTATION, ComputerType.SUPER_COMPUTER), LocalDate.of(2017, 3, 13));
+        final Computer computer10 = createPC(BigInteger.valueOf(7609), SOUNDCARD_VERSION, USB_VERSION, 2011, "C2", Arrays.asList(ComputerType.MAIN_FRAME, ComputerType.SUPER_COMPUTER), LocalDate.of(2018, 1, 25));
         return Arrays.asList(computer1, computer2, null, computer3, computer4, computer5, null, computer6, computer7, computer8, computer9, null, computer10);
     }
 
@@ -89,8 +89,8 @@ public class FullOptionalStreamAndLambdaApplication {
                 TimeZone.getDefault().toZoneId());
     }
 
-    private Computer createPC(BigInteger id, String soundCardVersion, String usbVersion, int usbId, String computerName, List<DomainElement> domainElement, LocalDate createAt) {
-        return new Computer(id, null, new SoundCard(soundCardVersion, createUsb(usbVersion, BigInteger.valueOf(usbId))), computerName, domainElement, createAt);
+    private Computer createPC(BigInteger id, String soundCardVersion, String usbVersion, int usbId, String computerName, List<ComputerType> computerType, LocalDate createAt) {
+        return new Computer(id, null, new SoundCard(soundCardVersion, createUsb(usbVersion, BigInteger.valueOf(usbId))), computerName, computerType, createAt);
     }
 
     private void printDeMorganLaw() {
@@ -131,7 +131,7 @@ public class FullOptionalStreamAndLambdaApplication {
     private boolean isMainFrame(final Computer computer) {
         return Optional.ofNullable(computer).map(Computer::getType).isPresent() &&
                 Optional.ofNullable(computer.getType())
-                        .map(t -> t.contains(DomainElement.MAIN_FRAME))
+                        .map(t -> t.contains(ComputerType.MAIN_FRAME))
                         .orElse(false);
     }
 
@@ -338,12 +338,12 @@ public class FullOptionalStreamAndLambdaApplication {
         return Stream.generate(new java.util.Random()::nextInt).limit(10);
     }
 
-    private Set<DomainElement> useOfFlatMap(List<Computer> computers) {
+    private Set<ComputerType> useOfFlatMap(List<Computer> computers) {
         return computers.stream()
                 .filter(Objects::nonNull)
                 .flatMap(computer -> CollectionUtils.emptyIfNull(computer.getType()).stream())
                 .collect(Collectors.toCollection(
-                        () -> new TreeSet<>(Comparator.comparing(DomainElement::getValue))
+                        () -> new TreeSet<>(Comparator.comparing(ComputerType::getValue))
                 ));
     }
 
@@ -351,7 +351,7 @@ public class FullOptionalStreamAndLambdaApplication {
         return computers.stream()
                 .filter(Objects::nonNull)
                 .map(mapper::computerToBin)
-                .filter(e -> CollectionUtils.isNotEmpty(e.getDomainElements()))
+                .filter(e -> CollectionUtils.isNotEmpty(e.getComputerTypes()))
                 .collect(Collectors.toList());
     }
 

@@ -15,5 +15,5 @@ import java.util.List;
 public class ComputerElementBin {
     private BigInteger id;
     private String name;
-    private List<DomainElement> domainElements;
+    private List<ComputerType> computerTypes;
 }

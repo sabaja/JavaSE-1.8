@@ -24,8 +24,8 @@ public class ComputerMapperDecorator implements ComputerMapper {
     @Override
     public ComputerElementBin computerToBin(Computer computer) {
         ComputerElementBin computerElementBin = delegate.computerToBin(computer);
-        List<DomainElement> elementTypes = new ArrayList<>(emptyIfNull(computer.getType()));
-        computerElementBin.setDomainElements(elementTypes);
+        List<ComputerType> elementTypes = new ArrayList<>(emptyIfNull(computer.getType()));
+        computerElementBin.setComputerTypes(elementTypes);
         return computerElementBin;
     }
 }

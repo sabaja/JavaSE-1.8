@@ -20,7 +20,7 @@ public final class Computer implements Serializable {
     private OS os;
     private SoundCard soundCard;
     private String name;
-    private List<DomainElement> type;
+    private List<ComputerType> type;
     private LocalDate createAt;
 
     public Computer(BigInteger id, SoundCard soundCard, String name) {
