@@ -2,10 +2,12 @@ package com.optionals;
 
 import org.mapstruct.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
-@DecoratedWith(ComputerMapperDecorator.class)
-@Mapper(componentModel = "spring")
+import static org.apache.commons.collections4.ListUtils.emptyIfNull;
+
+@Mapper(componentModel = "spring", unmappedSourcePolicy = ReportingPolicy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ComputerMapper {
 
     @IterableMapping(numberFormat = "$#.00")
@@ -17,5 +19,14 @@ public interface ComputerMapper {
     }
 
     @Mapping(target = "computerTypes", ignore = true)
-    ComputerElementBin computerToBin(Computer computer);
+    ComputerElementBin computerToElementBin(Computer computer);
+
+
+    default ComputerElementBin computerToBin(Computer computer) {
+        ComputerElementBin computerElementBin = computerToElementBin(computer);
+        List<ComputerType> elementTypes = new ArrayList<>(emptyIfNull(computer.getType()));
+        computerElementBin.setComputerTypes(elementTypes);
+        return computerElementBin;
+    }
 }
+

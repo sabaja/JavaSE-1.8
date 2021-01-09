@@ -6,13 +6,12 @@ import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -32,6 +31,7 @@ import static java.util.stream.Collectors.toSet;
 
 @Slf4j
 @SpringBootApplication
+@ComponentScan(basePackages = "com.optionals")
 public class FullOptionalStreamAndLambdaApplication {
     public static final String SOUNDCARD_VERSION = "v1.0.1";
 
@@ -41,9 +41,9 @@ public class FullOptionalStreamAndLambdaApplication {
     private static final String USB_VERSION_2 = "v.3.3.2";
     private static final String SOUNDCARD_VERSION_2 = "v0.4.1";
 
-    @Autowired()
-    @Qualifier("delegate")
-    private ComputerMapper mapper;
+//    @Autowired
+//    @Qualifier("delegate")
+//    private ComputerMapper mapper;
 
     public static void main(String[] args) {
         SpringApplication.run(FullOptionalStreamAndLambdaApplication.class, args);
@@ -378,16 +378,18 @@ public class FullOptionalStreamAndLambdaApplication {
     }
 
     private List<ComputerElementBin> retrieveComputerElements(List<Computer> computers) {
-        return computers.stream()
-                .filter(Objects::nonNull)
-                .map(mapper::computerToBin)
-                .filter(e -> CollectionUtils.isNotEmpty(e.getComputerTypes()))
-                .collect(Collectors.toList());
+//        return computers.stream()
+//                .filter(Objects::nonNull)
+//                .map(mapper::computerToBin)
+//                .filter(e -> CollectionUtils.isNotEmpty(e.getComputerTypes()))
+//                .collect(Collectors.toList());
+        return null;
     }
 
     private List<Computer> mapstructReturnEmptyList() {
         List<Computer> list = new ArrayList<>();
-        return this.mapper.mapstructReturnEmptyList(list);
+//        return this.mapper.mapstructReturnEmptyList(list);
+        return list;
     }
 
     private List<Computer> returnEmptyList() {
