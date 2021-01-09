@@ -5,7 +5,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -332,13 +331,6 @@ public class FullOptionalStreamAndLambdaApplication {
                 .map(SoundCard::getVersion)
                 .filter(StringUtils::isNotEmpty)
                 .anyMatch(streamsAndLambda::isVersioned);
-    }
-
-    private boolean isEven() {
-        int nextInt = RandomUtils.nextInt(0, 10);
-        boolean even = nextInt % 2 == 0;
-        log.info("{} è pari? {}}", nextInt, even);
-        return even;
     }
 
     private boolean isVersioned(String version) {
