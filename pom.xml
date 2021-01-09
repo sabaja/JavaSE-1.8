@@ -161,7 +161,7 @@
         </dependency>
     </dependencies>
     <properties>
-        <mapstruct.version>1.3.1.Final</mapstruct.version>
-        <org.projectlombok.version>1.18.12</org.projectlombok.version>
+        <mapstruct.version>1.4.1.Final</mapstruct.version>
+        <org.projectlombok.version>1.18.16</org.projectlombok.version>
     </properties>
 </project>

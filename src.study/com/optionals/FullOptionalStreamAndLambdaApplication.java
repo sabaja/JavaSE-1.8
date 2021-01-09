@@ -3,16 +3,19 @@ package com.optionals;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -25,6 +28,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Objects.nonNull;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toSet;
 
 @Slf4j
 @SpringBootApplication
@@ -37,7 +42,8 @@ public class FullOptionalStreamAndLambdaApplication {
     private static final String USB_VERSION_2 = "v.3.3.2";
     private static final String SOUNDCARD_VERSION_2 = "v0.4.1";
 
-    @Autowired
+    @Autowired()
+    @Qualifier("delegate")
     private ComputerMapper mapper;
 
     public static void main(String[] args) {
@@ -60,13 +66,14 @@ public class FullOptionalStreamAndLambdaApplication {
                 final Stream<Computer> mutableBuilderOfStream = createStreamBuilder(computers);
                 mutableBuilderOfStream.forEach(e -> log.info("{}", e));
                 createByGenerateRandomStreamInt().forEach(e -> log.info("{}", e));
+                log.info("Start@{}", startUpTime(ctx));
+                useOfFlatMap(computers).forEach(e -> log.info("{}", e));
+                retrieveComputerElements(computers).forEach(e -> log.info("{}", e));
+                log.info("{}", mapstructReturnEmptyList());
+                log.info("{}", returnEmptyList());
             }
-            log.info("Start@{}", startUpTime(ctx));
-            useOfFlatMap(computers).forEach(e -> log.info("{}", e));
-            retrieveComputerElements(computers).forEach(e -> log.info("{}", e));
-            log.info("{}", mapstructReturnEmptyList());
-            log.info("{}", returnEmptyList());
 
+            retrieveComputerWithIdGreaterThanAverage();
         };
     }
 
@@ -81,7 +88,37 @@ public class FullOptionalStreamAndLambdaApplication {
         final Computer computer8 = createPC(BigInteger.valueOf(107), "NOT-SUPPORTED", USB_VERSION_2, 1_2, "C8", Collections.singletonList(ComputerType.NOT_DEFINED), LocalDate.of(9999, 12, 31));
         final Computer computer9 = createPC(BigInteger.valueOf(8), SOUNDCARD_VERSION, USB_VERSION, 999_111, "C2", Arrays.asList(ComputerType.PERSONAL_COMPUTER, ComputerType.WORKSTATION, ComputerType.SUPER_COMPUTER), LocalDate.of(2017, 3, 13));
         final Computer computer10 = createPC(BigInteger.valueOf(7609), SOUNDCARD_VERSION, USB_VERSION, 2011, "C2", Arrays.asList(ComputerType.MAIN_FRAME, ComputerType.SUPER_COMPUTER), LocalDate.of(2018, 1, 25));
-        return Arrays.asList(computer1, computer2, null, computer3, computer4, computer5, null, computer6, computer7, computer8, computer9, null, computer10);
+        return Arrays.asList(computer1, computer2, null, computer3, computer4, computer5, null, Objects.nonNull(computer6) ? computer6 : null, computer7, computer8, computer9, null, computer10);
+    }
+
+    private double computeAverageOfId(List<Computer> computers) {
+        return Optional.of(computers.stream()
+                .filter(Objects::nonNull)
+                .map(Computer::getId)
+                .filter(Objects::nonNull)
+                .mapToInt(BigInteger::intValue)
+                .summaryStatistics().getAverage()).orElse(null);
+    }
+
+    private void retrieveComputerWithIdGreaterThanAverage() {
+        final List<Computer> computers = of();
+        final BigDecimal avgBigDecimal = BigDecimal.valueOf(computeAverageOfId(computers));
+        if (Objects.nonNull(avgBigDecimal)) {
+            final Map<Boolean, Set<BigDecimal>> allIdsGreaterThanAvgMap = computers.stream()
+                    .filter(Objects::nonNull)
+                    .map(Computer::getId)
+                    .filter(Objects::nonNull)
+                    .map(BigDecimal::new)
+                    .collect(groupingBy(id -> avgBigDecimal.compareTo(id) > 0, toSet()));
+
+            if (MapUtils.isNotEmpty(allIdsGreaterThanAvgMap)) {
+                log.info("True value:");
+                allIdsGreaterThanAvgMap.entrySet()
+                        .stream()
+                        .filter(e -> BooleanUtils.isTrue(e.getKey()))
+                        .forEach(v -> log.info("{}", v));
+            }
+        }
     }
 
     private LocalDateTime startUpTime(ApplicationContext ctx) {
@@ -212,7 +249,7 @@ public class FullOptionalStreamAndLambdaApplication {
         //stream da computers / map di SoundCard / filter nonNull / collect to Set
         if (CollectionUtils.isNotEmpty(computers)) {
             Set<SoundCard> uniqueSoundCards = retrieveUniqueSoundCards(computers);
-            retrieveSoundCards(computers);
+            retrieveNullableSoundCards(computers);
             printSoundCards(uniqueSoundCards);
 
             if (isSoundCardVersioned(computers)
@@ -225,7 +262,8 @@ public class FullOptionalStreamAndLambdaApplication {
                 Map<String, String> soundCardsmap = computers.stream()
                         .filter(streamsAndLambda::isUSBVersioned)
                         .map(Computer::getSoundCard)
-                        .collect(Collectors.toMap(SoundCard::getVersion, soundCard -> soundCard.getUsb().getVersion()));
+                        .collect(Collectors.toMap(SoundCard::getVersion,
+                                soundCard -> soundCard.getUsb().getVersion()));
                 soundCardsmap.forEach((key, value) -> log.info("{} - {}", key, value));
             }
         }
@@ -264,12 +302,12 @@ public class FullOptionalStreamAndLambdaApplication {
                 .collect(Collectors.toSet());
     }
 
-    private List<SoundCard> retrieveSoundCards(List<Computer> computers) {
-        return nonNull(computers) ? retrieveNonNullSoundCard(computers) : null;
+    private List<SoundCard> retrieveNullableSoundCards(List<Computer> computers) {
+        return nonNull(computers) ? retrieveSoundCards(computers) : new ArrayList<>();
 
     }
 
-    private List<SoundCard> retrieveNonNullSoundCard(List<Computer> computers) {
+    private List<SoundCard> retrieveSoundCards(List<Computer> computers) {
         return computers.stream()
                 .filter(Objects::nonNull)
                 .map(Computer::getSoundCard)
