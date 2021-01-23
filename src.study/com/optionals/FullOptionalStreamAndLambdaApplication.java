@@ -6,10 +6,12 @@ import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
@@ -41,14 +43,19 @@ public class FullOptionalStreamAndLambdaApplication {
     private static final String USB_VERSION_2 = "v.3.3.2";
     private static final String SOUNDCARD_VERSION_2 = "v0.4.1";
 
-//    @Autowired
+    @Autowired
 //    @Qualifier("delegate")
-//    private ComputerMapper mapper;
+    private ComputerMapper mapper;
+
 
     public static void main(String[] args) {
-        SpringApplication.run(FullOptionalStreamAndLambdaApplication.class, args);
-    }
+        String aa = "11220220";
+        System.out.println(StringUtils.stripStart(aa, "0"));
 
+        final ConfigurableApplicationContext context = SpringApplication.run(FullOptionalStreamAndLambdaApplication.class, args);
+        log.info("Spring Boot is shutting down");
+        context.close();
+    }
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
         return args -> {
@@ -108,13 +115,12 @@ public class FullOptionalStreamAndLambdaApplication {
                     .map(Computer::getId)
                     .filter(Objects::nonNull)
                     .map(BigDecimal::new)
-                    .collect(groupingBy(id -> avgBigDecimal.compareTo(id) > 0, toSet()));
+                    .collect(groupingBy(id -> avgBigDecimal.compareTo(id) < 0, toSet()));
 
             if (MapUtils.isNotEmpty(allIdsGreaterThanAvgMap)) {
-                log.info("True value:");
                 allIdsGreaterThanAvgMap.entrySet()
                         .stream()
-                        .filter(e -> BooleanUtils.isTrue(e.getKey()))
+//                        .filter(e -> BooleanUtils.isTrue(e.getKey()))
                         .forEach(v -> log.info("{}", v));
             }
         }
@@ -378,18 +384,16 @@ public class FullOptionalStreamAndLambdaApplication {
     }
 
     private List<ComputerElementBin> retrieveComputerElements(List<Computer> computers) {
-//        return computers.stream()
-//                .filter(Objects::nonNull)
-//                .map(mapper::computerToBin)
-//                .filter(e -> CollectionUtils.isNotEmpty(e.getComputerTypes()))
-//                .collect(Collectors.toList());
-        return null;
+        return computers.stream()
+                .filter(Objects::nonNull)
+                .map(mapper::computerToBin)
+                .filter(e -> CollectionUtils.isNotEmpty(e.getComputerTypes()))
+                .collect(Collectors.toList());
     }
 
     private List<Computer> mapstructReturnEmptyList() {
         List<Computer> list = new ArrayList<>();
-//        return this.mapper.mapstructReturnEmptyList(list);
-        return list;
+        return this.mapper.mapstructReturnEmptyList(list);
     }
 
     private List<Computer> returnEmptyList() {
