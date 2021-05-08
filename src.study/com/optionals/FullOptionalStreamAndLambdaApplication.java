@@ -42,6 +42,7 @@ public class FullOptionalStreamAndLambdaApplication {
     private static final String USB_VERSION = "v.1.0.2";
     private static final String USB_VERSION_2 = "v.3.3.2";
     private static final String SOUNDCARD_VERSION_2 = "v0.4.1";
+    public static final String V = "V";
 
     @Autowired
 //    @Qualifier("delegate")
@@ -56,10 +57,11 @@ public class FullOptionalStreamAndLambdaApplication {
         log.info("Spring Boot is shutting down");
         context.close();
     }
+
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
         return args -> {
-            final List<Computer> computers = of();
+            final List<Computer> computers = ofComputers();
             if (false) {
                 streamsAndOptions();
                 distinctByProperty();
@@ -83,7 +85,7 @@ public class FullOptionalStreamAndLambdaApplication {
         };
     }
 
-    public List<Computer> of() {
+    public List<Computer> ofComputers() {
         final Computer computer1 = createPC(BigInteger.valueOf(11001), SOUNDCARD_VERSION, USB_VERSION, 1_000_000, "C1", Collections.singletonList(ComputerType.MAIN_FRAME), LocalDate.of(2018, 1, 25));
         final Computer computer2 = createPC(BigInteger.valueOf(1202), null, "v.5.q.2", 1_000, "C2", Arrays.asList(ComputerType.PERSONAL_COMPUTER, ComputerType.WORKSTATION), LocalDate.of(2008, 4, 2));
         final Computer computer3 = new Computer(BigInteger.valueOf(1043), null, "C3");
@@ -107,7 +109,7 @@ public class FullOptionalStreamAndLambdaApplication {
     }
 
     private void retrieveComputerWithIdGreaterThanAverage() {
-        final List<Computer> computers = of();
+        final List<Computer> computers = ofComputers();
         final BigDecimal avgBigDecimal = BigDecimal.valueOf(computeAverageOfId(computers));
         if (Objects.nonNull(avgBigDecimal)) {
             final Map<Boolean, Set<BigDecimal>> allIdsGreaterThanAvgMap = computers.stream()
@@ -152,7 +154,7 @@ public class FullOptionalStreamAndLambdaApplication {
     }
 
     private void printNumberOfUsbRate() {
-        final List<Computer> computers = of();
+        final List<Computer> computers = ofComputers();
 
         final BigInteger totalRatePC = retrieveMainFrameComputer(computers).stream()
                 .map(computer -> Optional.ofNullable(computer.getSoundCard())
@@ -188,7 +190,7 @@ public class FullOptionalStreamAndLambdaApplication {
      * https://stackoverflow.com/questions/23699371/java-8-distinct-by-property
      */
     private void distinctByProperty() {
-        List<Computer> computers = of();
+        List<Computer> computers = ofComputers();
         Set<String> distComputers = new HashSet<>(computers.size());
         computers
                 .stream()
@@ -200,7 +202,7 @@ public class FullOptionalStreamAndLambdaApplication {
     }
 
     private void distinctByProperty2() {
-        List<Computer> computers = of();
+        List<Computer> computers = ofComputers();
         computers.stream()
                 .filter(Objects::nonNull)
                 .collect(Collectors.toMap(
@@ -230,7 +232,7 @@ public class FullOptionalStreamAndLambdaApplication {
     private void defaultInLambda() {
         List<Computer> computers = null;
         final long COUNT = Optional.ofNullable(computers)
-                .orElse(of())
+                .orElse(ofComputers())
                 .stream()
                 .filter(Objects::nonNull)
                 .count();
@@ -242,13 +244,15 @@ public class FullOptionalStreamAndLambdaApplication {
         checkIfEmpty(computers);
         final boolean b = BooleanUtils.toBoolean(createRandomInt());
         if (b) {
-            computers = of();
+            computers = ofComputers();
             String computerStream = computers.stream()
                     .filter(Objects::nonNull)
                     .map(Optional::of).findAny()
                     .flatMap(Function.identity())
                     .map(Computer::getSoundCard)
-                    .map(SoundCard::getVersion).filter(s -> StringUtils.containsIgnoreCase(s, "V")).orElse(StringUtils.EMPTY);
+                    .map(SoundCard::getVersion)
+                    .filter(s -> StringUtils.containsIgnoreCase(s, V))
+                    .orElse(StringUtils.EMPTY);
             log.info(computerStream);
         }
         //stream da computers / map di SoundCard / filter nonNull / collect to Set
