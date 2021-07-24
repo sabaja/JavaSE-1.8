@@ -36,14 +36,12 @@ import static java.util.stream.Collectors.toSet;
 @ComponentScan(basePackages = "com.optionals")
 public class FullOptionalStreamAndLambdaApplication {
     public static final String SOUNDCARD_VERSION = "v1.0.1";
-
+    public static final String V = "V";
     //v.1 v.2 v.3 etc...
     private static final String VERSION_REGEX = "v\\d\\.";
     private static final String USB_VERSION = "v.1.0.2";
     private static final String USB_VERSION_2 = "v.3.3.2";
     private static final String SOUNDCARD_VERSION_2 = "v0.4.1";
-    public static final String V = "V";
-
     @Autowired
 //    @Qualifier("delegate")
     private ComputerMapper mapper;
@@ -61,7 +59,7 @@ public class FullOptionalStreamAndLambdaApplication {
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
         return args -> {
-            final List<Computer> computers = ofComputers();
+            final List<Computer> computers = createComputers();
             if (false) {
                 streamsAndOptions();
                 distinctByProperty();
@@ -85,7 +83,7 @@ public class FullOptionalStreamAndLambdaApplication {
         };
     }
 
-    public List<Computer> ofComputers() {
+    public List<Computer> createComputers() {
         final Computer computer1 = createPC(BigInteger.valueOf(11001), SOUNDCARD_VERSION, USB_VERSION, 1_000_000, "C1", Collections.singletonList(ComputerType.MAIN_FRAME), LocalDate.of(2018, 1, 25));
         final Computer computer2 = createPC(BigInteger.valueOf(1202), null, "v.5.q.2", 1_000, "C2", Arrays.asList(ComputerType.PERSONAL_COMPUTER, ComputerType.WORKSTATION), LocalDate.of(2008, 4, 2));
         final Computer computer3 = new Computer(BigInteger.valueOf(1043), null, "C3");
@@ -109,7 +107,7 @@ public class FullOptionalStreamAndLambdaApplication {
     }
 
     private void retrieveComputerWithIdGreaterThanAverage() {
-        final List<Computer> computers = ofComputers();
+        final List<Computer> computers = createComputers();
         final BigDecimal avgBigDecimal = BigDecimal.valueOf(computeAverageOfId(computers));
         if (Objects.nonNull(avgBigDecimal)) {
             final Map<Boolean, Set<BigDecimal>> allIdsGreaterThanAvgMap = computers.stream()
@@ -154,7 +152,7 @@ public class FullOptionalStreamAndLambdaApplication {
     }
 
     private void printNumberOfUsbRate() {
-        final List<Computer> computers = ofComputers();
+        final List<Computer> computers = createComputers();
 
         final BigInteger totalRatePC = retrieveMainFrameComputer(computers).stream()
                 .map(computer -> Optional.ofNullable(computer.getSoundCard())
@@ -187,10 +185,11 @@ public class FullOptionalStreamAndLambdaApplication {
     }
 
     /**
-     * https://stackoverflow.com/questions/23699371/java-8-distinct-by-property
+     * https://s
+     * tackoverflow.com/questions/23699371/java-8-distinct-by-property
      */
     private void distinctByProperty() {
-        List<Computer> computers = ofComputers();
+        List<Computer> computers = createComputers();
         Set<String> distComputers = new HashSet<>(computers.size());
         computers
                 .stream()
@@ -202,7 +201,7 @@ public class FullOptionalStreamAndLambdaApplication {
     }
 
     private void distinctByProperty2() {
-        List<Computer> computers = ofComputers();
+        List<Computer> computers = createComputers();
         computers.stream()
                 .filter(Objects::nonNull)
                 .collect(Collectors.toMap(
@@ -232,7 +231,7 @@ public class FullOptionalStreamAndLambdaApplication {
     private void defaultInLambda() {
         List<Computer> computers = null;
         final long COUNT = Optional.ofNullable(computers)
-                .orElse(ofComputers())
+                .orElse(createComputers())
                 .stream()
                 .filter(Objects::nonNull)
                 .count();
@@ -244,7 +243,7 @@ public class FullOptionalStreamAndLambdaApplication {
         checkIfEmpty(computers);
         final boolean b = BooleanUtils.toBoolean(createRandomInt());
         if (b) {
-            computers = ofComputers();
+            computers = createComputers();
             String computerStream = computers.stream()
                     .filter(Objects::nonNull)
                     .map(Optional::of).findAny()
